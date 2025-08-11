@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday Video</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .container {
+      text-align: center;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    #message {
+      font-size: 2.2rem;
+      color: #ff4081;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 2px solid #ff4081;
+      width: 0;
+      margin: 0 auto 40px;
+      animation: typing 5s steps(40, end) 7s forwards, blink 0.7s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 80% }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent }
+    }
+
+    .cake {
+      position: relative;
+      margin: 0 auto;
+    }
+
+    .layer {
+      border-radius: 10px;
+      margin: 0 auto;
+      border: 4px solid #fff;
+      position: relative;
+      opacity: 0;
+    }
+
+    .layer-bottom {
+      width: 180px;
+      height: 60px;
+      background: #ff6f91;
+      z-index: 1;
+      animation: lightUp 2s ease-in-out 1s forwards;
+    }
+
+    .layer-middle {
+      width: 140px;
+      height: 50px;
+      background: #ff8fab;
+      z-index: 2;
+      animation: lightUp 2s ease-in-out 2.5s forwards;
+    }
+
+    .layer-top {
+      width: 100px;
+      height: 40px;
+      background: #f48fb1;
+      z-index: 3;
+      animation: lightUp 2s ease-in-out 4s forwards;
+    }
+
+    .candle {
+      width: 12px;
+      height: 20px;
+      background: #fff176;
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 3px;
+      z-index: 4;
+      opacity: 0;
+      animation: fadeInCandle 1s ease-in-out 5.5s forwards;
+    }
+
+    .flame {
+      width: 22px;
+      height: 30px;
+      background: red;
+      border-radius: 50% 50% 0 0;
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: glow 1.5s infinite, fadeInFlame 1s ease-in-out 6s forwards;
+      opacity: 0;
+      z-index: 5;
+    }
+
+    @keyframes lightUp {
+      0% { opacity: 0; filter: brightness(0.2) blur(5px); }
+      100% { opacity: 1; filter: brightness(1) blur(0px); }
+    }
+
+    @keyframes fadeInCandle { to { opacity: 1; } }
+    @keyframes fadeInFlame { to { opacity: 1; } }
+    @keyframes glow {
+      0%   { background: red; box-shadow: 0 0 10px red; }
+      25%  { background: orange; box-shadow: 0 0 15px orange; }
+      50%  { background: yellow; box-shadow: 0 0 20px yellow; }
+      75%  { background: pink; box-shadow: 0 0 15px pink; }
+      100% { background: red; box-shadow: 0 0 10px red; }
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      opacity: 0.8;
+      border-radius: 50%;
+      animation: twinkle 2s infinite ease-in-out alternate;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.1; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.5); }
+    }
+
+    #sub-message {
+      font-size: 1rem;
+      color: #ffd1dc;
+      margin-top: -20px;
+      opacity: 0;
+      animation: fadeIn 3s ease-in-out 9s forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="player"></div>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  let player;
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+      height: '0',
+      width: '0',
+      videoId: 'w82M-k9L3uo', // Replace with your YouTube video ID
+      playerVars: {
+        autoplay: 1,
+        loop: 1,
+        playlist: 'w82M-k9L3uo' // Required for looping
+      },
+      events: {
+        onReady: (event) => event.target.playVideo()
+      }
+    });
+  }
+</script>
+
+
+  <!-- Fireworks Canvas -->
+  <canvas id="fireworks"></canvas>
+
+  <div class="container">
+    <div class="cake">
+      <div class="layer layer-top">
+        <div class="candle">
+          <div class="flame"></div>
+        </div>
+      </div>
+      <div class="layer layer-middle"></div>
+      <div class="layer layer-bottom"></div>
+    </div>
+    <h1 id="message">🎉 Happy Birthday, my Madam! 💖</h1>
+    <p id="sub-message">Remember that I'm there for you in any situation and be Happy "My World"</p>
+  </div>
+
+  <script>
+    // Unmute music on first click
+    const music = document.getElementById("bg-music");
+    
+
+    // Stars
+    const starCount = 100;
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.top = Math.random() * 100 + 'vh';
+      star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      document.body.appendChild(star);
+    }
+
+    // Fireworks
+    const canvas = document.getElementById("fireworks");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    class Firework {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height;
+        this.targetY = Math.random() * (canvas.height / 2);
+        this.color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+        this.particles = [];
+        this.exploded = false;
+      }
+      update() {
+        if (!this.exploded) {
+          this.y -= 6;
+          if (this.y <= this.targetY) {
+            this.exploded = true;
+            for (let i = 0; i < 50; i++) {
+              this.particles.push(new Particle(this.x, this.y, this.color));
+            }
+          }
+        } else {
+          this.particles.forEach(p => p.update());
+        }
+      }
+      draw() {
+        if (!this.exploded) {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        } else {
+          this.particles.forEach(p => p.draw());
+        }
+      }
+    }
+
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.vx = (Math.random() - 0.5) * 6;
+        this.vy = (Math.random() - 0.5) * 6;
+        this.alpha = 1;
+      }
+      update() {
+        this.x += this.vx;
+        this.y +=
+      }
